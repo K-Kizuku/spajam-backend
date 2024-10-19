@@ -49,6 +49,20 @@ jobs:
           service: ${{ secrets.GCP_SERVICE }}
           region: ${{ secrets.GCP_REGION }}
           image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_REPOSITORY_ID }}/${{ secrets.GCP_SERVICE }}:${{ github.sha }}
+          env_vars: |-
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            INSTANCE_CONNECTION_NAME=${{ secrets.INSTANCE_CONNECTION_NAME }}
+            MODE=prod
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+            GCP_REGION=${{ secrets.GCP_REGION }}
+            GCP_SERVICE=${{ secrets.GCP_SERVICE }}
+            GCP_REPOSITORY_ID=${{ secrets.GCP_REPOSITORY_ID }}
+            GCP_BUCKET_ID=${{ secrets.GCP_BUCKET_ID }}
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output

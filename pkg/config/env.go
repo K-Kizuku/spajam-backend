@@ -23,10 +23,12 @@ var (
 
 // .envを呼び出します。
 func LoadEnv() {
-	err := godotenv.Load()
+	if os.Getenv("MODE") == "dev" {
+		err := godotenv.Load()
 
-	if err != nil {
-		log.Printf("読み込み出来ませんでした: %v", err)
+		if err != nil {
+			log.Printf("読み込み出来ませんでした: %v", err)
+		}
 	}
 
 	DB_DSN = os.Getenv("DB_DSN")
