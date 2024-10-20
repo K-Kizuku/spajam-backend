@@ -18,8 +18,11 @@ func InitHandler() *handler.Root {
 		gcp.NewStorageClient,
 		repository.NewUserRepository,
 		repository.NewStorageRepository,
+		repository.NewChatRepository,
 		service.NewUserService,
+		service.NewChatService,
 		handler.NewUserHandler,
+		handler.NewChatHandler,
 		handler.New,
 	)
 	return &handler.Root{}

@@ -1,0 +1,1 @@
+ALTER TABLE buildings DROP CONSTRAINT fk_user_building;

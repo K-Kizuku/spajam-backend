@@ -52,25 +52,26 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
+# ARG UID=10001
+# RUN adduser \
+#     --disabled-password \
+#     --gecos "" \
+#     --home "/nonexistent" \
+#     --shell "/sbin/nologin" \
+#     --no-create-home \
+#     --uid "${UID}" \
+#     appuser
+# USER appuser
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 
-# COPY .env .env
-# COPY key.json key.json
-# RUN curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.13.0/cloud-sql-proxy.linux.amd64
-# RUN chmod +x cloud-sql-proxy
-# RUN ./cloud-sql-proxy spajam-2024-coffee-milk:asia-northeast1:spajam-milk-eisa-db-prod=tcp:0.0.0.0:5432 --json-credentials=key.json &
+COPY .env .env
+COPY key.json key.json
+COPY storage-admin.json storage-admin.json
+RUN curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.13.0/cloud-sql-proxy.linux.amd64
+RUN chmod +x cloud-sql-proxy
+RUN ./cloud-sql-proxy spajam-2024-coffee-milk:asia-northeast1:spajam-milk-eisa-db-prod=tcp:0.0.0.0:5432 --json-credentials=key.json &
 
 # Expose the port that the application listens on.
 EXPOSE 8080

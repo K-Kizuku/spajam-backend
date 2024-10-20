@@ -31,3 +31,17 @@ UPDATE users
   set code = $2
 WHERE user_id = $1;
 
+-- name: CreateChat :one
+INSERT INTO chats (
+  chat_id, user_id_1, user_id_2, content
+) VALUES (
+  $1, $2, $3, $4
+)
+RETURNING *;
+
+-- name: GetChatByUserID :many
+SELECT chat_id, user_id_1, user_id_2, content FROM chats
+WHERE user_id_1 = $1 OR user_id_2 = $1;
+
+
+

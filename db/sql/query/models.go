@@ -4,6 +4,25 @@
 
 package query
 
+type Building struct {
+	BuildingID   string
+	Zip          int32
+	BuildingType string
+	OldLevel     int32
+}
+
+type Chat struct {
+	ChatID  string
+	UserID1 string
+	UserID2 string
+	Content string
+}
+
+type Notification struct {
+	NotificationID string
+	UserID         string
+}
+
 type User struct {
 	UserID         string
 	Mail           string

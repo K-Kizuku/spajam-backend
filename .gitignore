@@ -31,3 +31,5 @@ key.json
 cloud-sql-proxy
 
 storage-admin.json
+
+deploy.sh

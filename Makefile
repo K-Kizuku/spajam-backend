@@ -20,7 +20,7 @@ gen-migrate:
 	migrate create -ext sql -dir db/migrations -seq $(name)
 
 migrate:
-	migrate -path db/migrations -database "postgres://$(DB_USER):$(DB_PASSWORD)@localhost:5432/eisa?sslmode=disable" up
+	migrate -path db/migrations -database "postgres://$(DB_USER):$(DB_PASSWORD)@localhost:5432/$(DB_NAME)?sslmode=disable" up
 
 local-migrate:
 	migrate -path db/migrations -database "postgres://postgres:password@localhost:5432/example?sslmode=disable" up
@@ -64,7 +64,14 @@ setup-proxy:
 	rm cloud-sql-proxy
 
 cloud-sql-proxy:
-	cloud_sql_proxy yanbaru-eisa:asia-northeast1:yanbaru-eisa-eisa-db-prod=tcp:0.0.0.0:5432 --credential-file=key.json
+	cloud-sql-proxy spajam-2024-coffee-milk:asia-northeast1:spajam-milk-eisa-db-prod=tcp:0.0.0.0:5432 --credential-file=key.json
 
 sql-gen:
-	sqlc generate -f ./db/sql/sqlc.yaml       
+	sqlc generate -f ./db/sql/sqlc.yaml   
+
+commit:
+	npx git-cz  
+
+deploy:
+	sh ./deploy.sh
+

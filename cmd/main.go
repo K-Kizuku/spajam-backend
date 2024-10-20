@@ -13,6 +13,7 @@ import (
 	"github.com/K-Kizuku/spajam-backend/internal/di"
 	env "github.com/K-Kizuku/spajam-backend/pkg/config"
 	"github.com/K-Kizuku/spajam-backend/pkg/handler"
+	"github.com/K-Kizuku/spajam-backend/pkg/middleware"
 )
 
 func main() {
@@ -31,6 +32,8 @@ func main() {
 
 	mux.Handle("POST /signup", handler.AppHandler(h.UserHandler.SignUp()))
 	mux.Handle("POST /signin", handler.AppHandler(h.UserHandler.SignIn()))
+	mux.Handle("GET /chats", middleware.Auth(handler.AppHandler(h.ChatHandler.GetChatByUserID())))
+	mux.Handle("POST /chats", middleware.Auth(handler.AppHandler(h.ChatHandler.CreateChat())))
 
 	server := &http.Server{
 		Addr:    ":8080",

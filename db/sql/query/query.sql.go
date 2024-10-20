@@ -9,6 +9,39 @@ import (
 	"context"
 )
 
+const createChat = `-- name: CreateChat :one
+INSERT INTO chats (
+  chat_id, user_id_1, user_id_2, content
+) VALUES (
+  $1, $2, $3, $4
+)
+RETURNING chat_id, user_id_1, user_id_2, content
+`
+
+type CreateChatParams struct {
+	ChatID  string
+	UserID1 string
+	UserID2 string
+	Content string
+}
+
+func (q *Queries) CreateChat(ctx context.Context, arg CreateChatParams) (Chat, error) {
+	row := q.db.QueryRow(ctx, createChat,
+		arg.ChatID,
+		arg.UserID1,
+		arg.UserID2,
+		arg.Content,
+	)
+	var i Chat
+	err := row.Scan(
+		&i.ChatID,
+		&i.UserID1,
+		&i.UserID2,
+		&i.Content,
+	)
+	return i, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
   user_id, mail, name, code, hashed_password
@@ -43,6 +76,36 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.HashedPassword,
 	)
 	return i, err
+}
+
+const getChatByUserID = `-- name: GetChatByUserID :many
+SELECT chat_id, user_id_1, user_id_2, content FROM chats
+WHERE user_id_1 = $1 OR user_id_2 = $1
+`
+
+func (q *Queries) GetChatByUserID(ctx context.Context, userID1 string) ([]Chat, error) {
+	rows, err := q.db.Query(ctx, getChatByUserID, userID1)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Chat
+	for rows.Next() {
+		var i Chat
+		if err := rows.Scan(
+			&i.ChatID,
+			&i.UserID1,
+			&i.UserID2,
+			&i.Content,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one

@@ -23,6 +23,9 @@ func InitHandler() *handler.Root {
 	iStorageRepository := repository.NewStorageRepository(client)
 	iUserService := service.NewUserService(iUserRepository, iStorageRepository)
 	iUserHandler := handler.NewUserHandler(iUserService)
-	root := handler.New(iUserHandler)
+	iChatRepository := repository.NewChatRepository(queries)
+	iChatService := service.NewChatService(iChatRepository)
+	iChatHandler := handler.NewChatHandler(iChatService)
+	root := handler.New(iUserHandler, iChatHandler)
 	return root
 }
